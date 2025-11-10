@@ -1,0 +1,93 @@
+# arquivo: sistema_tarefas_legado.py
+
+# Variáveis globais e nomes ambíguos
+lista_t = []
+contador = 1
+
+def processar_operacao(operacao, dados=""):
+    """
+    Função monolítica que faz tudo: adiciona, lista, remove e mostra menu.
+    Mistura responsabilidades de lógica de negócio e interface de usuário.
+    """
+    global contador
+    global lista_t
+
+    if operacao == '1':
+        # Adicionar Tarefa
+        if dados:
+            t_id = str(contador)
+            lista_t.append(f"{t_id}: {dados} [PENDENTE]")
+            contador += 1
+            print(f"\nTarefa '{dados}' (ID: {t_id}) adicionada.")
+        else:
+            print("\nErro: Nome da tarefa não pode ser vazio.")
+        
+    elif operacao == '2':
+        # Listar Tarefas
+        print("\n--- LISTA DE TUDO ---")
+        if not lista_t:
+            print("Nenhuma tarefa no sistema.")
+            return
+
+        for t in lista_t: # Nome de variável 't' é ruim
+            print(f"-> {t}")
+        print("---------------------")
+
+    elif operacao == '3':
+        # Remover Tarefa
+        try:
+            id_remov = int(dados) # 'id_remov' não diz o que é
+            tarefa_encontrada = False
+            nova_lista = []
+            for item in lista_t:
+                if not item.startswith(f"{id_remov}:"):
+                    nova_lista.append(item)
+                else:
+                    tarefa_encontrada = True
+            
+            if tarefa_encontrada:
+                lista_t = nova_lista
+                print(f"\nTarefa ID {id_remov} removida com sucesso.")
+            else:
+                print(f"\nErro: Tarefa ID {id_remov} não encontrada.")
+
+        except ValueError:
+            print("\nErro: ID precisa ser um número.")
+
+    elif operacao == '4':
+        # Mostrar o Menu
+        print("\n=== MENU PRINCIPAL ===")
+        print("1. Adicionar Nova Tarefa")
+        print("2. Listar TODAS as Tarefas")
+        print("3. Remover Tarefa por ID")
+        print("4. Mostrar Menu")
+        print("5. SAIR")
+        print("======================\n")
+
+    elif operacao == '5':
+        # Sair do Sistema
+        return False # Retorna False para encerrar o loop principal
+
+    return True # Continua o loop principal
+
+
+# Loop Principal
+print("\nBEM-VINDO AO SISTEMA SIMPLES DE TAREFAS.")
+executando = True
+while executando:
+    processar_operacao('4') # Mostra o menu inicial
+    
+    op = input("Escolha a operação: ")
+    
+    if op == '1':
+        nome = input("Digite o nome da tarefa: ")
+        processar_operacao(op, nome)
+    elif op == '3':
+        tid = input("Digite o ID da tarefa para remover: ")
+        processar_operacao(op, tid)
+    elif op in ['2', '5']:
+        executando = processar_operacao(op)
+    else:
+        print("\nOpção inválida. Tente novamente.")
+
+print("Sistema Encerrado. Até logo!")

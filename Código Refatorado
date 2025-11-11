@@ -1,0 +1,135 @@
+# arquivo: sistema_tarefas.py
+
+class Tarefa:
+
+    def __init__(self, id_tarefa, nome):
+self.id = id_tarefa
+
+        self.nome = nome
+
+        self.status = "PENDENTE"
+
+    def __str__(self):
+
+        return f"{self.id}: {self.nome} [{self.status}]"
+
+
+class GerenciadorTarefas:
+
+    def __init__(self):
+
+        self.tarefas = []
+
+        self.proximo_id = 1
+
+    def adicionar_tarefa(self, nome):
+
+        tarefa = Tarefa(self.proximo_id, nome)
+
+        self.tarefas.append(tarefa)
+
+        self.proximo_id += 1
+
+        return tarefa
+
+    def listar_tarefas(self):
+
+        return self.tarefas
+
+    def remover_tarefa(self, id_tarefa):
+
+        for t in self.tarefas:
+
+            if t.id == id_tarefa:
+
+                self.tarefas.remove(t)
+
+                return True
+
+        return False
+
+class SistemaTarefasCLI:
+
+    def __init__(self):
+
+        self.gerenciador = GerenciadorTarefas()
+
+    def mostrar_menu(self):
+
+        print("\n=== MENU PRINCIPAL ===")
+
+        print("1. Adicionar Nova Tarefa")
+
+        print("2. Listar Tarefas")
+
+        print("3. Remover Tarefa por ID")
+
+        print("5. SAIR")
+
+        print("======================")
+
+    def executar(self):
+
+        print("\nBEM-VINDO AO SISTEMA DE TAREFAS REFACTORED.\n")
+
+        while True:
+
+            self.mostrar_menu()
+
+            opc = input("Escolha a operação: ")
+
+            if opc == "1":
+
+                nome = input("Digite o nome da tarefa: ")
+
+                tarefa = self.gerenciador.adicionar_tarefa(nome)
+
+                print(f"Tarefa adicionada: {tarefa}")
+
+            elif opc == "2":
+
+                tarefas = self.gerenciador.listar_tarefas()
+
+                if not tarefas:
+
+                    print("Nenhuma tarefa cadastrada.")
+
+                else:
+
+                    print("\n--- LISTA DE TAREFAS ---")
+
+                    for t in tarefas:
+
+                        print("->", t)
+
+            elif opc == "3":
+
+                try:
+
+                    id_remover = int(input("Digite o ID da tarefa a remover: "))
+
+                    if self.gerenciador.remover_tarefa(id_remover):
+
+                        print("Tarefa removida com sucesso.")
+
+                    else:
+
+                        print("Tarefa não encontrada.")
+
+                except:
+
+                    print("ID inválido.")
+
+            elif opc == "5":
+
+                print("Sistema encerrado.")
+
+                break
+
+            else:
+
+                print("Opção inválida.")
+
+if __name__ == "__main__":
+
+    SistemaTarefasCLI().executar() 

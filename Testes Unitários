@@ -1,0 +1,84 @@
+test_sistema_tarefas_refactor.py
+
+import pytest
+
+from sistema_tarefas import GerenciadorTarefas, Tarefa
+
+@pytest.fixture
+
+def gerenciador():
+
+    return GerenciadorTarefas()
+
+def test_adicionar_tarefa(gerenciador):
+
+    tarefa = gerenciador.adicionar_tarefa("Comprar leite")
+
+    assert isinstance(tarefa, Tarefa)
+
+    assert tarefa.id == 1
+
+    assert tarefa.nome == "Comprar leite"
+
+    assert tarefa.status == "PENDENTE"
+
+    assert len(gerenciador.listar_tarefas()) == 1
+
+def test_listar_tarefas_vazio(gerenciador):
+
+    assert gerenciador.listar_tarefas() == []
+
+def test_listar_tarefas_com_itens(gerenciador):
+
+    gerenciador.adicionar_tarefa("Tarefa 1")
+
+    gerenciador.adicionar_tarefa("Tarefa 2")
+
+    tarefas = gerenciador.listar_tarefas()
+
+    assert len(tarefas) == 2
+
+    assert tarefas[0].nome == "Tarefa 1"
+
+    assert tarefas[1].nome == "Tarefa 2"
+
+def test_remover_tarefa_existente(gerenciador):
+
+    gerenciador.adicionar_tarefa("Tarefa para remover")
+
+    resultado = gerenciador.remover_tarefa(1)
+
+    assert resultado is True
+
+    assert gerenciador.listar_tarefas() == []
+
+def test_remover_tarefa_inexistente(gerenciador):
+
+    gerenciador.adicionar_tarefa("Tarefa existente")
+
+    resultado = gerenciador.remover_tarefa(999)
+
+    assert resultado is False
+
+    assert len(gerenciador.listar_tarefas()) == 1
+
+def test_adicionar_varias_tarefas_e_remover_meio(gerenciador):
+
+    gerenciador.adicionar_tarefa("Tarefa 1")
+
+    gerenciador.adicionar_tarefa("Tarefa 2")
+
+    gerenciador.adicionar_tarefa("Tarefa 3")
+
+    # Remover a do meio
+
+    gerenciador.remover_tarefa(2)
+
+    tarefas = gerenciador.listar_tarefas()
+
+    assert len(tarefas) == 2
+
+    assert tarefas[0].id == 1
+
+    assert tarefas[1].id == 3
+ 
